@@ -3,3 +3,4 @@ src/output.css
 node_modules/
 _pycache__/
 tailwindcss
+output.css
