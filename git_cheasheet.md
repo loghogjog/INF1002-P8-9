@@ -21,24 +21,25 @@ Some Guidelines:
 
 ---
 
-## Clone the Repository (first time only)
+## After Cloning the Repository 
 ```bash
-git clone https://github.com/loghogjog/PhishGuard.git # change repo name before submission
-cd PhishGuard
+cd [repo_name]
 
-git checkout staging #switch to main branch
+git checkout staging #switch to staging branch
 git pull origin staging
 
 git checkout -b [name_of_branch] # -b creates a new branch
-
 ##create your files and write your code in the new branch (DO NOT WRITE/PUSH TO MAIN)
+```
+---
 
+## Commiting and Pushing your Code
+```bash
 git add . # . adds all files. use the file name directly if you wish to only commit specific files 
 
 git commit -m "[short_discription_of_commit]" # discriptions must be easy for others to understand
 
 git push -u origin [name_of_branch] # push your local repo to the specified branch in github
-
 ```
 
 ---
@@ -61,31 +62,23 @@ Submit the PR (target branch = staging).
 ---
 
 
-## Subsequently, Before Pushing Any Commits, Pull from staging (IMPORTANT) 
+## Subsequently, Before Pushing Any Commits or working on any code, Pull from staging first (IMPORTANT) 
 ```bash
-# Basically, always pull from staging branch before you write any code to prevent conflicts
+git pull origin staging
 
-git fetch origin staging
-git checkout [name_of_branch]
-git merge origin/staging
+# resolve conflicts if any
 
-OR 
+# write your code
 
-git pull staging
-
-# resolve conflicts if any, write your code, then:
-
-git add [file/files]
-git commit -m "[your_message]"
+# same commands to push your files
+git add .
+git commit -m "[message]"
 git push -u origin [your_branch]
 ```
-
 ---
 
 ## Other commands:
 ```bash
 git branch # branch with * shows which branch you are in
 use q to quit
-
-
 ```
