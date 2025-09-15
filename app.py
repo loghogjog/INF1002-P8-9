@@ -1,39 +1,44 @@
-from flask import Flask, request, render_template, redirect, url_for, flash
+from flask import Flask, request, render_template
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads/'
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Limit upload size to 16MB (TBC)
 
 ALLOWED_EXTENSIONS = {".eml"}
 FILENAME = ""
-list_of_reasons = []
+SAFE_RETURN_CODE = 0
+SUSPICIOUS_RETURN_CODE = 1
+MALICIOUS_RETURN_CODE = 2
+INVALID_RETURN_CODE = -1
+LIST_OF_REASONS = []
 
-def allowed_file(filename):
+def allowed_file_extension_check(filename):
+    '''
+    This function compares the uploaded flie extension against ALLOWED_EXTENSIONS whitelist
+    Good for scaling in the future should more extensions ever be allowed.
+    '''
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/', methods=['GET'])
-def home():
-    return render_template('index.html', reasons=list_of_reasons)
+def index():
+    return render_template('index.html')
 
-@app.route('/upload', methods=['POST'])
-def upload_eml_file():
-    if 'file' not in request.files:
-        flash('No file part')
-        return redirect(request.url)
-    file = request.files['file']
-    if file.filename == '':
-        flash('No selected file')
-        return redirect(request.url)
-    if file and allowed_file(file.filename):
-        # insert filename hashing here
-        filename = secure_filename(file.filename)
-        file.save(app.config['UPLOAD_FOLDER'] + filename)
-        global FILENAME
-        FILENAME = filename
-        # process the file and update list_of_reasons
-        # call custom functions here
-        return redirect(url_for('home'))
+@app.route('/', methods=['POST'])
+def upload():
+    file = request.files.get("email_file")
+
+    # Double check if file exists and file type is accepted
+    if not file or not allowed_file_extension_check(file.filename):
+        return render_template("index.html", response_code=INVALID_RETURN_CODE, reasons=["Missing File"] if not file else ["File uploaded must be EML file"])
+
+    # File upload passed validity checks    
+    global FILENAME
+    FILENAME = secure_filename(file.filename)
+
+    # process the file and update list_of_reasons
+    # call custom functions here
+    # finally, evaluate risk score of email and decide on the return code
+    #code = SAFE_RETURN_CODE / SUSPICIOUS_RETURN_CODE / MALICIOUS_RETURN_CODE
+    return render_template("index.html", response_code=SAFE_RETURN_CODE, reasons=LIST_OF_REASONS)
 
     
     
