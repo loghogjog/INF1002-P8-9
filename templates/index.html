@@ -73,8 +73,8 @@
                     <span class="">&#9989</span> Legitimate
                 {% elif response_code == 1 %}
                     <span class="">&#63</span> Suspicious
-                { elif response_code == 2 %}
-                    &#10060 Malicious
+                {% elif response_code == 2 %}
+                    <span>>&#10060</span> Malicious
                 {% elif response_code == -1 %}
                     <span class="bg-yellow-100">&#9888</span> Invalid File
                 {% endif %}

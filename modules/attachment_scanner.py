@@ -2,6 +2,7 @@
 import requests
 import os
 import magic
+import mimetypes
 from dotenv import load_dotenv
 
 load_dotenv() # load variables from .env to os.environ
@@ -29,10 +30,10 @@ def mime_type_check(attachment_data, declared_file_ext):
     try:
         # magic bytes
         magic_bytes = magic.from_buffer(attachment_data, mime=True)[:2048].split('/')[-1].lower() # getting extension from mimetype e.g. application/pdf 
-
-        return magic_bytes == declared_file_ext
+        mime_type = mimetypes.types_map.get("." + declared_file_ext).split("/")[1]
+        return magic_bytes == mime_type
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"MIME Scan Error: {e}")
 
 
 def is_attachment_safe(attachment): # takes attachment json; specify return type for efficiency -> (type)
@@ -53,6 +54,7 @@ def is_attachment_safe(attachment): # takes attachment json; specify return type
             })
 
         ### MIME type scan
+        print(attachment['ext'])
         if not mime_type_check(attachment['data'], attachment['ext']): #failed MIME type check
             mime_result = "Fail"
             mime_weight = MIME_TYPE_SCAN_WEIGHT
@@ -61,7 +63,7 @@ def is_attachment_safe(attachment): # takes attachment json; specify return type
             mime_weight = SCAN_CLEAN_WEIGHT
 
         attachment_scan_results.append({
-            "rule":"MIME type check" + mime_result,
+            "result":"MIME Type Check " + mime_result,
             "weight":mime_weight
         })
 
@@ -140,4 +142,30 @@ def extract_attachments(msg):
         return attachments_list
     return None
 
-                
+def attachment_evaluation(attachments):
+    if attachments: # attachments extracted
+        # perform analysis
+        attachments_scan_results = map(is_attachment_safe, attachments) # list of list of results
+        try:
+            for status in list(attachments_scan_results): # list of scan results
+                if status:    
+                    total_weight = sum([check['weight'] for check in status])
+                    final_weight = min(total_weight, 100) # sets weight limit to 100
+
+                    if final_weight == 100: # override: instantly flagged as malicious 
+                        attachment_scan_final_result = "Fail"
+                        attachment_severity = "Critical"
+                    elif final_weight >= 50:
+                        attachment_scan_final_result = "Potentially Unsafe"
+                        attachment_severity = "Suspicious"
+                    else:
+                        attachment_scan_final_result = "Safe"
+                        attachment_severity = "Safe"
+                else:
+                    print("No scan results")
+            return "Attachment Scan " + attachment_scan_final_result, attachment_severity, final_weight
+        except KeyError as e:
+                print(f"KeyError: {e}")
+    else:
+        print("No attachments found")
+        return

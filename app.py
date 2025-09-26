@@ -1,9 +1,7 @@
 # imports
 from flask import Flask, request, render_template
-#from werkzeug.utils import secure_filename
-import os
 from email import message_from_binary_file
-from modules.scanner import extract_attachments, is_attachment_safe, get_file_extension, ANTIVIRUS_SCAN_WEIGHT
+from modules.attachment_scanner import attachment_evaluation, get_file_extension, ANTIVIRUS_SCAN_WEIGHT, extract_attachments
 
 # app configs
 app = Flask(__name__)
@@ -46,44 +44,21 @@ def upload():
     msg = message_from_binary_file(file.stream)
 
     ''' Attachment Scanning '''
-    attachments = extract_attachments(msg) # list of attachment extension & binary data
+    attachments = extract_attachments(msg)
     print(attachments)
-    if attachments: # attachments extracted
-        # perform analysis
-        attachments_scan_results = map(is_attachment_safe, attachments) # list of list of results
-        try:
-            for status in list(attachments_scan_results): # list of scan results
-                if status:    
-                    total_weight = sum([check['weight'] for check in status])
-                    final_weight = min(total_weight, 100) # sets weight limit to 100
-
-                    if final_weight == 100: # override: instantly flagged as malicious 
-                        attachment_scan_final_result = "Fail"
-                        attachment_severity = "Critical"
-                    elif final_weight >= 50:
-                        attachment_scan_final_result = "Potentially Unsafe"
-                        attachment_severity = "Suspicious"
-                    else:
-                        attachment_scan_final_result = "Safe"
-                        attachment_severity = "Safe"
-                    overall_scan_result['signals'].append({
-                            "rule" : "Attachment Scan " + attachment_scan_final_result,
-                            "severity" : attachment_severity,
-                            "weight" : final_weight # 100
-                        })
-                else:
-                    print("No scan results")
-        except KeyError as e:
-                print(f"KeyError: {e}")
-        finally:
-            print(overall_scan_result)
+    if attachments: # attachments found
+        attachment_scan_final_result, attachment_severity, attachment_final_weight = attachment_evaluation(attachments)
     else:
-        print("No Attachments Extracted")
-        overall_scan_result['signals'].append({
-             "rule":"No Attachments Found",
-             "severity":"Info",
-             "weight": 0
+        attachment_scan_final_result = "No Attachments Found"
+        attachment_severity = "Info"
+        attachment_final_weight = 0
+
+    overall_scan_result['signals'].append({
+            "rule" : attachment_scan_final_result,
+            "severity" : attachment_severity,
+            "weight" : attachment_final_weight
         })
+    print(overall_scan_result)
 
     #store logs?
 
@@ -91,7 +66,7 @@ def upload():
     # call custom functions here
     # finally, evaluate risk score of email and decide on the return code
     #code = SAFE_RETURN_CODE / SUSPICIOUS_RETURN_CODE / MALICIOUS_RETURN_CODE
-    return render_template("index.html", response_code=SAFE_RETURN_CODE, reasons=overall_scan_result['signals'])
+    return render_template("index.html", response_code=SUSPICIOUS_RETURN_CODE, reasons=overall_scan_result['signals'])
 
     
     
