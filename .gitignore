@@ -3,3 +3,4 @@ static/dist/output.css
 node_modules/
 _pycache__/
 tailwindcss
+.env
