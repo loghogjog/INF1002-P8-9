@@ -13,36 +13,47 @@ SCAN_SUSPICIOUS_WEIGHT = 40
 SCAN_NO_RESULT_WEIGHT = 20
 SCAN_MALICIOUS_WEIGHT = 100
 
-def get_file_extension(filename):
+def get_file_extension(filename) -> list:
     '''
-    This function gets all extensions of the file
+    This function gets the extensions of the file
     '''
     try:
         # split file name from extension(s)
         file_ext = filename.split('.', 1)[1]
     except Exception as e:
         print(f"Get flie extension error: {e}")
-    return file_ext, len(file_ext.split('.'))
+    return file_ext
 
 
-def mime_type_check(attachment_data, declared_file_ext):
-    '''Getting actual MIME type'''
+def mime_type_check(attachment_data, declared_file_ext) -> bool:
+    '''Retrieves actual MIME type by looking at MZ bytes'''
     try:
         # magic bytes
         magic_bytes = magic.from_buffer(attachment_data, mime=True)[:2048].split('/')[-1].lower() # getting extension from mimetype e.g. application/pdf 
+        #declared file type
         mime_type = mimetypes.types_map.get("." + declared_file_ext).split("/")[1]
         return magic_bytes == mime_type
     except Exception as e:
         print(f"MIME Scan Error: {e}")
+        return
 
 
 def is_attachment_safe(attachment): # takes attachment json; specify return type for efficiency -> (type)
+    '''
+    Performs various scans on attachments
+
+    First performs a preliminary analysis by scanning for double extensions and 
+    for mismatching MIME types
+
+    Secondary scan, when results from preliminary analysis is not enough to conclude, 
+    a secondary scan is performed by parsing the attachment to an antivirus API 
+    '''
     try:
         attachment_scan_results = []
-    
-    ## Double extensions check
-    
-        if get_file_extension(attachment['name'])[1] > 1:
+
+        ## Double extensions check
+        extension = get_file_extension(attachment['name'])
+        if len(extension.split('.')) > 1:
             double_extension_result = "Fail"
             d_ext_weight = SCAN_MALICIOUS_WEIGHT
         else:
@@ -55,7 +66,8 @@ def is_attachment_safe(attachment): # takes attachment json; specify return type
 
         ### MIME type scan
         print(attachment['ext'])
-        if not mime_type_check(attachment['data'], attachment['ext']): #failed MIME type check
+        mime_check_result =  mime_type_check(attachment['data'], attachment['ext'])
+        if not mime_check_result: #failed MIME type check
             mime_result = "Fail"
             mime_weight = MIME_TYPE_SCAN_WEIGHT
         else:
@@ -66,6 +78,11 @@ def is_attachment_safe(attachment): # takes attachment json; specify return type
             "result":"MIME Type Check " + mime_result,
             "weight":mime_weight
         })
+
+        ## Preliminary Analysis
+        # Immediately exit if both checks fail - saves resources
+        if double_extension_result.lower() == "fail" and not mime_check_result:
+            return attachment_scan_results
 
         ### Antivirus API 
         url = "https://eu.developer.attachmentav.com/v1/scan/sync/binary"
@@ -124,6 +141,9 @@ def is_attachment_safe(attachment): # takes attachment json; specify return type
 
 
 def extract_attachments(msg):
+    '''
+    Extracts all attachments from eml file
+    '''
     attachments_list = []
 
     if msg.is_multipart():
@@ -143,6 +163,10 @@ def extract_attachments(msg):
     return None
 
 def attachment_evaluation(attachments):
+    '''
+    Evaluate Attachment Risk
+    Main attachment scan function that calls other functions in module
+    '''
     if attachments: # attachments extracted
         # perform analysis
         attachments_scan_results = map(is_attachment_safe, attachments) # list of list of results

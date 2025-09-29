@@ -1,0 +1,36 @@
+From: newsletter@example.com
+To: subscriber@example.org
+Subject: Our latest newsletter
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============4658032862230745348=="
+
+--===============4658032862230745348==
+Content-Type: multipart/related;
+ boundary="===============4481883362687496879=="
+
+--===============4481883362687496879==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+This is the text fallback for the newsletter.
+
+--===============4481883362687496879==
+Content-Type: image/png
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="banner.png"
+Content-ID: image1
+MIME-Version: 1.0
+
+iVBORw0KGgoAAAANSUhEUg==
+
+--===============4481883362687496879==--
+
+--===============4658032862230745348==
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="promo.txt"
+MIME-Version: 1.0
+
+UHJvbW8gZGV0YWlscyBoZXJl
+
+--===============4658032862230745348==--
