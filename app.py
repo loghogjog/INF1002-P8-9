@@ -35,10 +35,5 @@ def upload_eml_file():
         # call custom functions here
         return redirect(url_for('home'))
 
-    
-    
-    
-
-
 if __name__== '__main__':
     app.run(debug=True)
