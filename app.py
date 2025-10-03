@@ -1,6 +1,7 @@
 # imports
 from flask import Flask, request, render_template
-from email import message_from_binary_file
+from email import message_from_binary_file, policy
+from email.utils import parseaddr
 from modules.attachment_scanner import attachment_evaluation, get_file_extension, ANTIVIRUS_SCAN_WEIGHT, extract_attachments
 
 # app configs
@@ -42,7 +43,15 @@ def upload():
     # file passed validity checks
     file.stream.seek(0)
     msg = message_from_binary_file(file.stream)
+    
+    #tristan's parts:
+    ''' get sender's address '''
+    raw_from = msg["From"]
+    name, sender_email = parseaddr(raw_from)
+    ''' whitelist check + edit distance check, then add into results '''
+    overall_scan_result['signals'].append(classify_sender(sender_email))
 
+    
     ''' Attachment Scanning '''
     attachments = extract_attachments(msg)
     print(attachments)
@@ -59,7 +68,7 @@ def upload():
             "weight" : attachment_final_weight
         })
     print(overall_scan_result)
-
+    
     #store logs?
 
     # process the file and update list_of_reasons
