@@ -1,3 +1,4 @@
+#---Tristan Koh---#
 import re
 
 def levenshtein_distance(word1, word2):
@@ -21,7 +22,7 @@ def levenshtein_distance(word1, word2):
     return table[-1][-1]
 
 
-def load_whitelist(filename="whitelist.txt"):
+def load_whitelist(filename="static/src/whitelist.txt"):
     with open(filename, "r") as f:
         return [line.strip().lower() for line in f if line.strip()]
 
@@ -57,21 +58,20 @@ def classify_sender(email_address):
 
     suspicious, target_domain = is_suspicious(domain)
     if suspicious:
-        rule = f"Scam Likely (similar to {target_domain})"
+        rule = f"Scam Likely"
         severity = "Critical"
         weight = 42
+        reason = f"Similar to {target_domain}"
 
     else:
-        rule = "Unverified/Suspicious (sender is not whitelisted nor within threshold limit of trying to impersonate)"
+        rule = "Unverified/Suspicious"
         severity = "Suspicious"
         weight = 67
+        reason = "Sender is not whitelisted nor within threshold limit of trying to impersonate"
 
     return {"rule" : rule,
             "severity" : severity,
-            "weight" : weight}
-
-
-if __name__ == "__main__":
-    print("How to use: overall_scan_result['signals'].append(classify_sender(sender_email))")
+            "weight" : weight,
+            "reasons":reason}
     
 
