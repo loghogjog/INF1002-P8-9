@@ -1,0 +1,33 @@
+From: friend@example.com
+To: you@example.com
+Subject: Vacation Pics + Song
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7329939347068882721=="
+
+--===============7329939347068882721==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Hey! Check out this photo and song I wanted to share with you.
+
+--===============7329939347068882721==
+Content-Type: image/jpeg
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="beach.jpg"
+MIME-Version: 1.0
+
+/9j/4AAQSkZJRgABAQEAYABgAAD/4QxYRXhpZgAATU0AKgAAAAgAAwESAAMAAAABAAEAAIdpAAQA
+AAABAAAAAAAAAP/bAEMACAYGBwYFCAcHBwkKDBQNDAsLDBkSFBYZHhocHB8fHxQaIiAfIyolIC0r
+KSQsLDA0ODMwNDwyPj8//9oADAMBAAIRAxEAPwDSzyD/2Q==
+
+--===============7329939347068882721==
+Content-Type: audio/mpeg
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="song.mp3"
+MIME-Version: 1.0
+
+SUQzAwAAAAAADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+--===============7329939347068882721==--

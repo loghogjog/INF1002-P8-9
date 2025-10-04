@@ -15,10 +15,33 @@
         .animate-progress {
             animation: progress 2s ease-in-out infinite;
         }
+        .dropdown-arrow {
+            transition: transform 0.3s ease;
+        }
+        .dropdown-arrow.open {
+            transform: rotate(180deg);
+        }
+        .details-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .details-content.open {
+            max-height: 500px;
+            transition: max-height 0.5s ease-in;
+        }
     </style>
     <script>
         function showLoadingBar() {
-            document.getElementById(loading-bar).classList.remove("hidden");
+            document.getElementById('loading-bar').classList.remove("hidden");
+        }
+        
+        function toggleDetails(index) {
+            const details = document.getElementById('details-' + index);
+            const arrow = document.getElementById('arrow-' + index);
+            
+            details.classList.toggle('open');
+            arrow.classList.toggle('open');
         }
     </script>
 </head>
@@ -29,10 +52,13 @@
             Welcome to PhishGuard
         </h1>
         <!-- Subheader -->
-        <h3>Your free phishing email analysis service</p>
+        <h3 class="font-semibold">Your free phishing email analysis service</h3>
+
+        <hr class="mb-6 border-gray-300">
 
         <!-- Form Upload -->
         <form method="POST" action="/" enctype="multipart/form-data"
+            onsubmit="showLoadingBar()"
             class="flex flex-col gap-4">
             <input type="file" name="email_file" accept=".eml" required
                 class="file:mr-4 file:py-2 file:px-4
@@ -57,37 +83,91 @@
         </div>
 
         <!-- Results -->
-        {% if response_code %}
+        {% if response %}
         <div class="mt-8 p-4 rounded-lg border 
-                    {% if response_code == 0 %}
-                        bg-green-100 border-green-400 text-green-800
-                    {% elif response_code == 1 %}
-                        bg-yellow-100 border-yellow-400 text-yellow-800
-                    {% elif response_code == 2 %}
-                        bg-red-100 border-red-400 text-red-800
-                    {% elif response_code == -1 %}
-                        bg-yellow-100 border-yellow-400 text-yellow-800
+                    {% if response.verdict == 0 %}
+                        bg-green-200 border-green-400 text-green-800
+                    {% elif response.verdict == 1 %}
+                        bg-yellow-200 border-yellow-400 text-yellow-800
+                    {% elif response.verdict == 2 %}
+                        bg-red-200 border-red-400 text-red-800
+                    {% elif response.verdict == -1 %}
+                        bg-yellow-200 border-yellow-400 text-yellow-800
+                    {% elif response.verdict == 'None' %}
+                        bg-red-200 border-red-400 text-red-800
                     {% endif %}">
-            <h2 class="text-lg font-bold">
-                {% if response_code == 0 %}
-                    <span class="">&#9989</span> Legitimate
-                {% elif response_code == 1 %}
-                    <span class="">&#63</span> Suspicious
-                {% elif response_code == 2 %}
-                    <span>>&#10060</span> Malicious
-                {% elif response_code == -1 %}
-                    <span class="bg-yellow-100">&#9888</span> Invalid File
+            <h2 class="text-lg font-bold text-center">
+                {% if response.verdict == 0 %}
+                    <span>[&#9989]</span> Legitimate
+                {% elif response.verdict == 1 %}
+                    <span>[&#10067]</span> Suspicious
+                {% elif response.verdict == 2 %}
+                    <span>[&#10060]</span> Malicious
+                {% elif response.verdict == -1 %}
+                    <span>[&#9888]</span> Invalid File
+                {% elif response.verdict == 'None' %}
+                    <span>[&#10060]</span> Error analysing file. Try again later
                 {% endif %}
             </h2>
-
-            {% if reasons %}
-                <ul class="mt-3 space-y-2 list-disc list-inside">
-                    {% for reason in reasons %}
-                        <li> {{ reason }}</li>
-                    {% endfor %}
-                </ul>
+        </div>
+        
+        {% if response.signals %}
+        <div class="mt-4 rounded-lg border">
+            <p class="space-y-2 list-disc list-inside">
+                {% for res in response.signals %}
+                    <li class="p-1 rounded-lg border 
+                                {% if res.severity == 'Info' %}
+                                    bg-green-200 border-green-400 text-green-800
+                                {% elif res.severity == 'Suspicious' %}
+                                    bg-yellow-100 border-yellow-400 text-yellow-800
+                                {% elif res.severity == 'Critical' %}
+                                    bg-red-100 border-red-400 text-red-800
+                                {% endif %}">
+                        <div class="flex items-center justify-between {% if res.reasons %}cursor-pointer hover:opacity-80{% endif %}" 
+                                {% if res.reasons %}onclick="toggleDetails({{ loop.index }})"{% endif %}>
+                            <div>
+                                <span>
+                                    {% if res.severity == 'Info' %}
+                                        [&#128994]
+                                    {% elif res.severity == 'Suspicious' %}
+                                        [&#10067]
+                                    {% elif res.severity == "Critical" %}
+                                        [&#10060]
+                                    {% endif %}
+                                </span> 
+                                {{ res.rule }}
+                            </div>
+                            {% if res.reasons %}
+                            <svg id="arrow-{{ loop.index }}" class="dropdown-arrow w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        {% if res.reasons %}
+                        <div id="details-{{ loop.index }}" class="details-content">
+                            <ul class="space-y-2 list-disc list-inside mt-2 ml-4">
+                                {% for reason in res.reasons %}
+                                <p class="p-1"> 
+                                    <span>
+                                        {% if 'Pass' in reason %}
+                                            [&#128994]
+                                        {% elif 'Fail' in reason %}
+                                            [&#10060]   
+                                        {% else %}
+                                            [&#10067]
+                                        {% endif %}
+                                    </span>
+                                    {{ reason }}
+                                </p>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </p>
             {% else %}
-                <p class="mt-2"> No Suspicions Flagged</p>
+                <p class="mt-2 bg-green-200 border-green-400 text-green-800"><span>[&#128994]</span> No Suspicions Flagged</p>
             {% endif %}
         </div>
         {% endif %}
