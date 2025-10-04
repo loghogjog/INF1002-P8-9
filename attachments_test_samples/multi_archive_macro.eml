@@ -1,0 +1,36 @@
+From: hr@company.com
+To: user@example.com
+Subject: Salary Review 2025
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============1560750831123390066=="
+
+--===============1560750831123390066==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Hi, please check the attached files for your salary review.
+
+--===============1560750831123390066==
+Content-Type: application/zip
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="details.zip"
+MIME-Version: 1.0
+
+UEsDBBQAAAAIAPtAQ1tulivuKAAAACYAAAASAAAAZGV0YWlscy9yZWFkbWUudHh0C07MSSyqVEhJ
+LUnMzClWKMhJTE7NyM9JSS3iikxNLLJSMDIwMuUCAFBLAQIUAxQAAAAIAPtAQ1tulivuKAAAACYA
+AAASAAAAAAAAAAAAAACAAQAAAABkZXRhaWxzL3JlYWRtZS50eHRQSwUGAAAAAAEAAQBAAAAAWAAA
+AAAA
+
+--===============1560750831123390066==
+Content-Type: application/vnd.ms-word.document.macroEnabled.12
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="review.docm"
+MIME-Version: 1.0
+
+UEsDBBQAAAAIAPtAQ1vdWoYNDwAAAA0AAAARAAAAd29yZC9kb2N1bWVudC54bWyzKbdKyU8uzU3N
+K9G3AwBQSwMEFAAAAAgA+0BDWzx1ctUhAAAAHwAAAA4AAAB2YmFQcm9qZWN0LmJpbnNLzE4Nc3IM
+KMrPSk0uccrMSyyqDMhJTE7NyM9JSS0CAFBLAQIUAxQAAAAIAPtAQ1vdWoYNDwAAAA0AAAARAAAA
+AAAAAAAAAACAAQAAAAB3b3JkL2RvY3VtZW50LnhtbFBLAQIUAxQAAAAIAPtAQ1s8dXLVIQAAAB8A
+AAAOAAAAAAAAAAAAAACAAT4AAAB2YmFQcm9qZWN0LmJpblBLBQYAAAAAAgACAHsAAACLAAAAAAA=
+
+--===============1560750831123390066==--
