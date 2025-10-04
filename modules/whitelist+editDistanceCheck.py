@@ -53,22 +53,25 @@ def classify_sender(email_address):
     if is_whitelisted(domain):
         return {"rule" : "Trusted sender (in whitelist)",
                 "severity" : "Info",
-                "weight" : 67}
+                "weight" : 0}
 
     suspicious, target_domain = is_suspicious(domain)
     if suspicious:
         rule = f"Scam Likely (similar to {target_domain})"
         severity = "Critical"
+        weight = 42
 
     else:
         rule = "Unverified/Suspicious (sender is not whitelisted nor within threshold limit of trying to impersonate)"
         severity = "Suspicious"
+        weight = 67
 
     return {"rule" : rule,
             "severity" : severity,
-            "weight" : 67}
+            "weight" : weight}
 
 
 if __name__ == "__main__":
     print("How to use: overall_scan_result['signals'].append(classify_sender(sender_email))")
     
+
