@@ -45,12 +45,12 @@ def upload():
 
     # file passed validity checks
     file.stream.seek(0)
-    msg = message_from_binary_file(file.stream)
+    msg = message_from_binary_file(file.stream, policy=policy.default)
     
     #tristan's parts:
     ''' get sender's address '''
     raw_from = msg["From"]
-    name, sender_email = parseaddr(raw_from)
+    _, sender_email = parseaddr(raw_from)
     ''' whitelist check + edit distance check, then add into results '''
     overall_scan_result['signals'].append(classify_sender(sender_email))
 
