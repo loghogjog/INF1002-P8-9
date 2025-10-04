@@ -100,7 +100,7 @@ def antivirus_scan(attachment_data):
     ### Antivirus API 
     url = os.getenv("ANTIVIRUS_URL")
 
-    api_key = os.getenv("API_KEY")
+    api_key = os.getenv("ATTACHMENT_API_KEY")
 
     headers = {
         "x-api-key": api_key,
