@@ -1,7 +1,7 @@
 ## Project PhishGuard - INF1002-P8-9
 ```
-This is a simple rule-based phishing email analyser that runs on the web.
-It performs a series of checks on a .eml file
+This is a simple web page that runs rule-based phishing email analysis.
+It performs a series of checks on a .eml file.
 1. Keyword Detection
 2. Keyword Positioning Scoring
 3. Whitelist Check
