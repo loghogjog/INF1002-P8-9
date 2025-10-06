@@ -3,6 +3,7 @@ from flask import Flask, request, render_template
 from email import message_from_binary_file, policy
 from email.utils import parseaddr
 from modules.attachment_scanner import attachment_evaluation, get_file_extension, extract_attachments
+from modules.whitelistandeditDistanceCheck import classify_sender
 
 # app configs
 app = Flask(__name__)

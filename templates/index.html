@@ -146,20 +146,35 @@
                         {% if res.reasons %}
                         <div id="details-{{ loop.index }}" class="details-content">
                             <ul class="space-y-2 list-disc list-inside mt-2 ml-4">
-                                {% for reason in res.reasons %}
+                                {% if res.reasons is string %}
                                 <p class="p-1"> 
                                     <span>
-                                        {% if 'Pass' in reason %}
+                                        {% if res.severity == 'Info' %}
                                             [&#128994]
-                                        {% elif 'Fail' in reason %}
+                                        {% elif res.severity == 'Critical' %}
                                             [&#10060]   
                                         {% else %}
                                             [&#10067]
                                         {% endif %}
                                     </span>
-                                    {{ reason }}
+                                    {{ res.reasons }}
                                 </p>
-                                {% endfor %}
+                                {% else %}
+                                    {% for reason in res.reasons %}
+                                    <p class="p-1"> 
+                                        <span>
+                                            {% if 'Pass' in reason %}
+                                                [&#128994]
+                                            {% elif 'Fail' in reason %}
+                                                [&#10060]   
+                                            {% else %}
+                                                [&#10067]
+                                            {% endif %}
+                                        </span>
+                                        {{ reason }}
+                                    </p>
+                                    {% endfor %}
+                                {% endif %}
                             </ul>
                         </div>
                         {% endif %}
