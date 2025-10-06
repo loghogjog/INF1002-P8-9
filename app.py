@@ -26,8 +26,7 @@ def index():
 @app.route('/', methods=['POST'])
 def upload():
     '''
-    This is the main function where uploaded .eml 
-    files are sent to for processing and analysing
+    This is the main function where uploaded .eml files are sent to for processing and analysing
     '''
 
     # result baseline
@@ -48,7 +47,6 @@ def upload():
     file.stream.seek(0)
     msg = message_from_binary_file(file.stream)
     
-    #tristan's parts:
     ''' get sender's address '''
     raw_from = msg["From"]
     name, sender_email = parseaddr(raw_from)
@@ -58,33 +56,33 @@ def upload():
     
     ''' Attachment Scanning '''
     attachments = extract_attachments(msg)
-    #try:
-    if attachments: # attachments found
-        attachments_results = attachment_evaluation(attachments)
-        if attachments_results:
-            for attachment in attachments_results:
-                attachment_scan_final_result, attachment_severity, attachment_final_weight, attachment_scan_reasons = attachment
+    try:
+        if attachments: # attachments found
+            attachments_results = attachment_evaluation(attachments)
+            if attachments_results:
+                for attachment in attachments_results:
+                    attachment_scan_final_result, attachment_severity, attachment_final_weight, attachment_scan_reasons = attachment
+                    overall_scan_result['signals'].append({
+                        "rule" : attachment_scan_final_result,
+                        "severity" : attachment_severity,
+                        "weight" : attachment_final_weight,
+                        "reasons": attachment_scan_reasons
+                    })
+            else: # no scan result
                 overall_scan_result['signals'].append({
-                    "rule" : attachment_scan_final_result,
-                    "severity" : attachment_severity,
-                    "weight" : attachment_final_weight,
-                    "reasons": attachment_scan_reasons
+                    "rule": "Attachment Scan Unknown Results",
+                    "severity": "Suspicious",
+                    "weight": SCAN_NO_RESULT_WEIGHT,
                 })
-        else: # no scan result
+        else:
             overall_scan_result['signals'].append({
-                "rule": "Attachment Scan Unknown Results",
-                "severity": "Suspicious",
-                "weight": SCAN_NO_RESULT_WEIGHT,
+                "rule": "No Attachments Found",
+                "severity": "Info",
+                "weight": 0,
             })
-    else:
-        overall_scan_result['signals'].append({
-            "rule": "No Attachments Found",
-            "severity": "Info",
-            "weight": 0,
-        })
 
-    #except Exception as e:
-     #   print(f"Error occured during attachment scan: {e}")
+    except Exception as e:
+        print(f"Error occured during attachment scan: {e}")
 
     # Overall Evalutation of Risk Score
     total_risk_score = sum([risk['weight'] for risk in overall_scan_result['signals']])
