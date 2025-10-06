@@ -36,5 +36,7 @@ VIRUSTOTAL_API_KEY=<virustotal_api_key>
 VIRUSTOTAL_URL=https://www.virustotal.com/api/v3/urls
 
 python app.py
+
+# only .eml files accepted
 ```
  
