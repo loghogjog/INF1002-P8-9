@@ -57,6 +57,8 @@ def mime_type_check(name, ext, data) -> bool:
         kind = filetype.guess(data)
 
         if kind:
+            print(kind.extension)
+            print(kind.mime)
             # first part cross-checks against multiple scans, second part checks the actual extension against the declared extension of the attachmnet
             if (kind.mime == magic_bytes or kind.mime == mime_type) and kind.extension == ext:
                 return True
@@ -72,13 +74,13 @@ def mime_type_check(name, ext, data) -> bool:
                     file_type = "application/x-powershell"
                 elif "console.log" in file_data or "function(" in file_data:
                     file_type = "application/javascript"
-                elif data.startswith("@echo"):
+                elif data.startswith(b"@echo"):
                     file_type = "application/x-bat"
                 else:
                     file_type = "text/plain"
             except UnicodeDecodeError as e:
                 file_type =  "application/octet-stream"
-            print(file_type)
+                print(file_type)
             if file_type == "application/octet-stream": # unknown
                 return None
             elif not file_type == "text/plain": # suspicious file type
@@ -86,8 +88,8 @@ def mime_type_check(name, ext, data) -> bool:
             else: # plain text
                 return True
                 
-    except Exception as e:
-        print(f"MIME scan error: {e}")
+    except TypeError as e:
+        print(f"MIME scan type error: {e}")
         return None
 
 
@@ -217,8 +219,8 @@ def is_attachment_safe(attachment) -> list:
 
         return attachment_scan_results, attachment['name']
 
-    except Exception as e:
-        print(f"Is Attachment Safe Scan Error: {e}")
+    except TypeError as e:
+        print(f"Is Attachment Safe Scan Type Error: {e}")
         return
 
 

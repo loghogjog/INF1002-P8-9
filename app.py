@@ -1,6 +1,6 @@
 # imports
-from flask import Flask, request, render_template
-from email import message_from_binary_file
+from flask import Flask, jsonify, request, render_template
+from email import message_from_binary_file, policy
 from email.utils import parseaddr
 from modules.attachment_scanner import attachment_evaluation, get_file_extension, extract_attachments
 from modules.whitelistandeditDistanceCheck import classify_sender
@@ -83,11 +83,16 @@ def upload():
 
     except Exception as e:
         print(f"Error occured during attachment scan: {e}")
+        overall_scan_result['signals'].append({
+            "rule": "Attachment Scan Unknown Results",
+            "severity": "Suspicious",
+            "weight": SCAN_NO_RESULT_WEIGHT,
+        })
 
     # Overall Evalutation of Risk Score
     total_risk_score = sum([risk['weight'] for risk in overall_scan_result['signals']])
     moderated_risk_score = min(100, total_risk_score)
-    if moderated_risk_score < 50:
+    if moderated_risk_score < 40:
         verdict = SAFE_RETURN_CODE
     elif moderated_risk_score < 100:
         verdict = SUSPICIOUS_RETURN_CODE
@@ -97,6 +102,10 @@ def upload():
     overall_scan_result['score'] = moderated_risk_score
     print(overall_scan_result)
     
+    # If user asks for JSON, but mainly for automated testing
+    if request.headers.get("Accept") == "application/json":
+        return jsonify(overall_scan_result)
+    # Actual HTML return
     return render_template("index.html", response=overall_scan_result)
 
 

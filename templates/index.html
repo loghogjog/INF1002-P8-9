@@ -81,10 +81,13 @@
                 <div class="bg-orange-600 h-3 w-0 animate-progress"></div>
             </div>
         </div>
-
+        <!-- Legend -->
+        <div class="columns-3 mt-4">
+            <span>[&#9989]</span> - Legitimate <span>[&#10067]</span> - Suspicious <span>[&#10060]</span> - Malicious
+        </div>
         <!-- Results -->
         {% if response %}
-        <div class="mt-8 p-4 rounded-lg border 
+        <div class="mt-6 p-4 rounded-lg border 
                     {% if response.verdict == 0 %}
                         bg-green-200 border-green-400 text-green-800
                     {% elif response.verdict == 1 %}
