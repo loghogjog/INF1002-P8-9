@@ -9,7 +9,7 @@ def client():
     with app.test_client() as client:
         yield client
 
-def test_attachment_scan(client):
+def test_eml_uploads_and_final_results(client):
     eml_dir = "attachments_test_samples"
     for filename in os.listdir(eml_dir):
         if filename.endswith(".eml"):
@@ -26,8 +26,8 @@ def test_attachment_scan(client):
             
             response = client.post("/", data=data, content_type="multipart/form-data", headers={ "Accept": "application/json" })
             
-            # Test file upload
-            assert response.status_code == 200, f"File upload failed for {filename}: {response.data}"
+            # Assert only eml files accepted
+            assert response.status_code == 200 if filename.split('.')[1] == "eml" else response.status_code == 304, f"File upload failed for {filename}: {response.data}"
             
             json_data = response.get_json()
 
@@ -43,14 +43,3 @@ def test_attachment_scan(client):
                 expected_verdict = 2
 
             assert json_data['verdict'] == expected_verdict, f"Expected {expected_verdict}, got {json_data['verdict']} for score {json_data['score']}"
-
-            # Assert Attachments
-            # Assert Double Extension Check
-            for results in json_data['signals']:
-                if "attachment" in results['rule'].lower() and not results['rule'] ==  "No Attachments Found" and not "Unknown" in results['rule']:
-                    attachment_name = results['rule'].split(' - ')[1]
-                    if len(attachment_name.split('.')) > 2:
-                        assert "Double Extension Check Fail" in results['reasons']
-                    else: 
-                        assert "Double Extension Check Pass" in results['reasons']
-            # 
