@@ -11,7 +11,6 @@ def extract_eml_txt(file_stream):
     """
     file_stream.seek(0)
     email_msg = email.message_from_binary_file(file_stream)
-
     extracted_text = ""
     if email_msg.is_multipart():
         for part in email_msg.walk():
@@ -43,15 +42,22 @@ def is_ip_addr(url):
     """
     Check for ip addresses within urls
     """
-    parts = url.split(".")
-    if len(parts) != 4:
+    try:
+        parsed = urlparse(url)
+        host = parsed.hostname
+        if not host:
+            return False
+        parts = host.split(".")
+        if len(parts) != 4:
+            return False
+        for part in parts:
+            if not part.isdigit():
+                return False
+            if not (0 <= int(part) <= 255):
+                return False
+        return True
+    except Exception:
         return False
-    for part in parts:
-        if not part.isdigit():
-            return False
-        if not (0 < int(part) <= 255):
-            return False
-    return True
 
 def push_to_virustotal(url):
     """
@@ -156,14 +162,3 @@ def evaluate_url_risk(url, vt_result):
         final_risk = "Critical Risk"
 
     return {"url": url, "verdict": vt_status, "total_weight": weight, "final_risk": final_risk, "details": risk_rules, "virustotal_link": vt_result.get("permalink", "")}
-
-### Is this supposed to be in app.py?
-# text = extract_eml_txt(file_stream)
-# urls = extract_urls(text)
-#
-# final_results = []
-# for u in urls:
-#     vt_result = push_to_virustotal(u)
-#     risk_summary = evaluate_url_risk(u, vt_result)/
-#     final_results.append(risk_summary)
-#     print(risk_summary["url"], "-", risk_summary["final_risk"], risk_summary["total_weight"], risk_summary["details"])
