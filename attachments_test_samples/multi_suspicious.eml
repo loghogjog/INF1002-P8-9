@@ -1,0 +1,30 @@
+From: scammer@badmail.com
+To: victim@example.com
+Subject: Invoice Document
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8572436426479672833=="
+
+--===============8572436426479672833==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Dear user, please see attached invoice.
+
+--===============8572436426479672833==
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="invoice.pdf.exe"
+MIME-Version: 1.0
+
+TVoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+--===============8572436426479672833==
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="readme.vbs"
+MIME-Version: 1.0
+
+Q3JlYXRlT2JqZWN0KCJXU2NyaXB0LlNoZWxsIikuUnVuICJjYWxjLmV4ZSINCg==
+
+--===============8572436426479672833==--

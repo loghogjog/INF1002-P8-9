@@ -1,0 +1,34 @@
+From: alice@example.com
+To: bob@example.com
+Subject: Meeting Notes and Diagram
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============5485880025331081591=="
+
+--===============5485880025331081591==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Hi Bob,
+Here are the notes and diagram from today.
+
+Regards,
+Alice
+
+--===============5485880025331081591==
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="notes.txt"
+MIME-Version: 1.0
+
+SGVyZSBhcmUgdGhlIG1lZXRpbmcgbm90ZXMuCkFjdGlvbjogRm9sbG93IHVwLgo=
+
+--===============5485880025331081591==
+Content-Type: image/png
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="diagram.png"
+MIME-Version: 1.0
+
+iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1MAAAAKSURBVHicY2AAAAIAAQCg9acAAAAA
+SUVORK5CYII=
+
+--===============5485880025331081591==--
