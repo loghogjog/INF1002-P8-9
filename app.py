@@ -102,7 +102,7 @@ def upload():
     overall_scan_result['score'] = moderated_risk_score
     print(overall_scan_result)
     
-    # If user asks for JSON, but mainly for automated testing
+    # For automated testing
     if request.headers.get("Accept") == "application/json":
         return jsonify(overall_scan_result)
     # Actual HTML return
