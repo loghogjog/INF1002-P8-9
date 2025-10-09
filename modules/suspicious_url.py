@@ -1,9 +1,12 @@
 import email
 import base64
+import os
+
 import requests
 import time
 import re
 from urllib.parse import urlparse
+from dotenv import load_dotenv
 
 def extract_eml_txt(file_stream):
     """
@@ -63,7 +66,8 @@ def push_to_virustotal(url):
     """
     Push urls to virus total to check for malicious domains.
     """
-    api_key = "b898bbe506ad435cef97f641e761f50bf022959147ebbb9c5cb51e0dfb4686d2"
+    load_dotenv()
+    api_key = os.environ.get('URL_SCAN_API_KEY')
     submit_url = "https://www.virustotal.com/api/v3/urls"
     headers = {
         "accept": "application/json",
