@@ -15,6 +15,7 @@ SCAN_CLEAN_WEIGHT = 0
 SCAN_SUSPICIOUS_WEIGHT = 40
 SCAN_NO_RESULT_WEIGHT = 20
 SCAN_MALICIOUS_WEIGHT = 100
+DECODABLE_THRESHOLD = 0.9
 
 def get_file_extension(filename) -> str:
     '''
@@ -55,52 +56,42 @@ def mime_type_check(name, ext, data) -> bool:
 
         # using filetype library
         kind = filetype.guess(data)
+        try:
+            print(kind.mime)
+            print(kind.extension)
+        except Exception as e:
+            print(f"Cant print filetype MIME: {e}")
 
         if kind:
-            # first part cross-checks against multiple scans, second part checks the actual extension against the declared extension of the attachmnet
-            if (kind.mime == magic_bytes or kind.mime == mime_type) and kind.extension == ext:
-                return True
-            return False
+            # first part cross-checks against multiple scans, 
+            # second part checks the actual extension against the declared extension of the attachmnet
+            return True if (kind.mime == magic_bytes or kind.mime == mime_type) and kind.extension == ext else False
         else:
             # use text-based scanning - no magic bytes in payload
-            try:
-                file_data = data.decode('utf-8', errors='ignore').lower()
-                print(file_data)
-                if "wscript.shell" in file_data or "createobject" in file_data:
-                    file_type =  "application/x-vbscript"
-                elif "powershell" in file_data:
-                    file_type = "application/x-powershell"
-                elif "console.log" in file_data or "function(" in file_data:
-                    file_type = "application/javascript"
-                elif data.startswith("@echo"):
-                    file_type = "application/x-bat"
-                else:
-                    file_type = "text/plain"
-            except UnicodeDecodeError as e:
-                file_type =  "application/octet-stream"
+            printable = sum(32 <= b < 127 or b in (9, 10, 13) for b in data)
+            if printable / len(data) > DECODABLE_THRESHOLD:
+                file_type = "text/plain"
+            else:
+                # unknown binary
+                file_type = "application/octet-stream"
             print(file_type)
-            if file_type == "application/octet-stream": # unknown
-                return None
-            elif not file_type == "text/plain": # suspicious file type
-                return False
-            else: # plain text
-                return True
+            return True if (file_type == mime_type or file_type == magic_bytes) else False
                 
-    except Exception as e:
-        print(f"MIME scan error: {e}")
+    except TypeError as e:
+        print(f"MIME scan type error: {e}")
         return None
 
 
 
 
-def antivirus_scan(attachment_data):
+def antivirus_scan(attachment_data) -> tuple:
     '''
     This function performs an antivirus scan by calling 
     '''
     ### Antivirus API 
     url = os.getenv("ANTIVIRUS_URL")
 
-    api_key = os.getenv("API_KEY")
+    api_key = os.getenv("ATTACHMENT_API_KEY")
 
     headers = {
         "x-api-key": api_key,
@@ -145,7 +136,7 @@ def antivirus_scan(attachment_data):
         print(f"Error occured: {e}")
         return
     except TimeoutError as e:
-        print(f"Antivirus scan timed out, rerunning scan")
+        print(f"Antivirus scan timed out")
         return
 
 
@@ -176,9 +167,9 @@ def is_attachment_safe(attachment) -> list:
             })
 
         ### MIME type scan
-        mime_check_result =  mime_type_check(**attachment)
+        mime_check_result = mime_type_check(**attachment)
         print(mime_check_result)
-        if mime_check_result is not None: # Got results
+        if mime_check_result: # Got results
             print("mime")
             if not mime_check_result:
                 mime_result = "Fail"
@@ -204,12 +195,17 @@ def is_attachment_safe(attachment) -> list:
         
         ## Antivirus Scan
         antivirus_result, antivirus_weight = antivirus_scan(attachment['data'])
-        if (antivirus_result, antivirus_result) and (antivirus_result.lower() == "pass" or antivirus_result.lower() == "fail"): # results exists + not unknown scan results
+        
+        # results exists + not unknown scan results
+        if (antivirus_result, antivirus_result) \
+            and (antivirus_result.lower() == "pass" \
+            or antivirus_result.lower() == "fail"): 
+            
             attachment_scan_results.append({
                 "result":"Antivirus Scan " + antivirus_result,
                 "weight":antivirus_weight
             })
-        else:
+        else: # otherwise
             attachment_scan_results.append({
                 "result":"Antivirus Scan Results Unknown",
                 "weight":SCAN_NO_RESULT_WEIGHT
@@ -217,12 +213,12 @@ def is_attachment_safe(attachment) -> list:
 
         return attachment_scan_results, attachment['name']
 
-    except Exception as e:
-        print(f"Is Attachment Safe Scan Error: {e}")
+    except TypeError as e:
+        print(f"Is Attachment Safe Scan Type Error: {e}")
         return
 
 
-def extract_attachments(msg):
+def extract_attachments(msg) -> list:
     '''
     Extracts all attachments from eml file
     '''
@@ -244,7 +240,7 @@ def extract_attachments(msg):
         return attachments_list
     return None
 
-def attachment_evaluation(attachments):
+def attachment_evaluation(attachments) -> list:
     '''
     Evaluate Attachment Risk
     Main attachment scan function that calls other functions in this module
@@ -253,6 +249,7 @@ def attachment_evaluation(attachments):
     if attachments: # attachments extracted
         # perform analysis
         attachments_scan_results = list(map(is_attachment_safe, attachments)) # list of list of results
+        print(attachments_scan_results)
         try:
             for attachment in attachments_scan_results: # attachment in attachment list
                 if attachment[0]: # each scan result for that attachment
@@ -262,21 +259,18 @@ def attachment_evaluation(attachments):
                     if final_weight == 100: # override: instantly flagged as malicious 
                         attachment_scan_final_result = "Malicious Attachment"
                         attachment_severity = "Critical"
-                    elif final_weight >= 50:
+                    elif final_weight >= 40:
                         attachment_scan_final_result = "Attachment Potentially Unsafe"
                         attachment_severity = "Suspicious"
                     else:
                         attachment_scan_final_result = "Safe Attachment"
                         attachment_severity = "Info"
-                    # account for multiple attachments
-                    # place the result of each attachment in a dict
-                    # place list(attachment_scan_results[1]) in dict too <- attachment name
-                    # nest attachments in a list and return the list
                 else:
                     print("No scan results") # for backend logging, returns empty list anyway
                 
                 attachment_scan_reasons = [reason['result'] for reason in attachment[0] if "result" in reason] # reasons list
-                attachment_result_list.append([attachment_scan_final_result + " - " + attachment[1], attachment_severity, final_weight, attachment_scan_reasons])
+                attachment_result_list.append([attachment_scan_final_result + " - " + attachment[1], 
+                                               attachment_severity, final_weight, attachment_scan_reasons])
             
             return attachment_result_list
         except KeyError as e:

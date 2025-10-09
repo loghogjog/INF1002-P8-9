@@ -229,14 +229,14 @@
   .inline {
     display: inline;
   }
+  .table {
+    display: table;
+  }
   .h-3 {
     height: calc(var(--spacing) * 3);
   }
   .h-5 {
     height: calc(var(--spacing) * 5);
-  }
-  .h-10 {
-    height: calc(var(--spacing) * 10);
   }
   .min-h-screen {
     min-height: 100vh;
@@ -246,9 +246,6 @@
   }
   .w-5 {
     width: calc(var(--spacing) * 5);
-  }
-  .w-10 {
-    width: calc(var(--spacing) * 10);
   }
   .w-full {
     width: 100%;
@@ -267,6 +264,9 @@
   }
   .list-disc {
     list-style-type: disc;
+  }
+  .columns-3 {
+    columns: 3;
   }
   .flex-col {
     flex-direction: column;
