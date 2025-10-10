@@ -104,18 +104,13 @@ def upload():
                 vt_result = suspicious_url.push_to_virustotal(url)
                 url_eval = suspicious_url.evaluate_url_risk(url, vt_result)
 
-       
-                #reasons_text = [
-                #    f"{desc} (Severity: {sev}, +{w}pts)"
-                #    for desc, sev, w in url_eval["details"]
-                #]
 
                 print(url_eval['url'])
                 signal_entry = {
                     "rule": "URL Analysis",
                     "severity": url_eval["final_risk"],
                     "weight": url_eval["total_weight"],
-                    "reasons": "Suspicious URL: " + url_eval["url"],
+                    "reasons": ["URL: " + url_eval["url"], "Severity: " + url_eval["final_risk"]],
                 }
 
 
