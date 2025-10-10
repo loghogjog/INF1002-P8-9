@@ -91,41 +91,55 @@ def upload():
             "severity": "Suspicious",
             "weight": SCAN_NO_RESULT_WEIGHT,
         })
-        
-        
+
     try:
+
         file.stream.seek(0)
         email_text = suspicious_url.extract_eml_txt(file.stream)
 
-    
         urls = suspicious_url.extract_urls(email_text)
 
         if urls:
             for url in urls:
                 vt_result = suspicious_url.push_to_virustotal(url)
                 url_eval = suspicious_url.evaluate_url_risk(url, vt_result)
-                overall_scan_result['signals'].append({
-                "rule": "URL Analysis",
-                "severity": url_eval["final_risk"],
-                "weight": url_eval["total_weight"],
-                "reasons": [d[0] for d in url_eval["details"]],
-                "url": url_eval["url"],
-                "verdict": url_eval["verdict"],
-                "virustotal_link": url_eval["virustotal_link"]
-            })
-            else:
-                overall_scan_result['signals'].append({
+
+       
+                #reasons_text = [
+                #    f"{desc} (Severity: {sev}, +{w}pts)"
+                #    for desc, sev, w in url_eval["details"]
+                #]
+
+                print(url_eval['url'])
+                signal_entry = {
+                    "rule": "URL Analysis",
+                    "severity": url_eval["final_risk"],
+                    "weight": url_eval["total_weight"],
+                    "reasons": "Suspicious URL: " + url_eval["url"],
+                }
+
+
+                if url_eval.get("virustotal_link"):
+                    signal_entry["virustotal_link"] = url_eval["virustotal_link"]
+
+                overall_scan_result["signals"].append(signal_entry)
+
+        else:
+            overall_scan_result["signals"].append({
                 "rule": "No URLs Found",
-            "severity": "Info",
-            "weight": 0
-        })
+                "severity": "Info",
+                "weight": 0,
+                "reasons": []
+            })
+
     except Exception as e:
         print(f"Error occurred during URL scan: {e}")
-        overall_scan_result['signals'].append({
-        "rule": "URL Scan Failed",
-        "severity": "Suspicious",
-        "weight": 20
-    })
+        overall_scan_result["signals"].append({
+            "rule": "URL Scan Failed",
+            "severity": "Suspicious",
+            "weight": 20,
+            "reasons": [str(e)]
+        })
 
     # Overall Evalutation of Risk Score
     total_risk_score = sum([risk['weight'] for risk in overall_scan_result['signals']])

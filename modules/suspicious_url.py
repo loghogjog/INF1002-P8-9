@@ -157,12 +157,11 @@ def evaluate_url_risk(url, vt_result):
         weight += 60
 
     if weight <= 50:
-        final_risk = "Low Risk"
+        final_risk = "Info"
     elif weight <= 100:
-        final_risk = "Medium Risk"
-    elif weight <= 150:
-        final_risk = "High Risk"
+        final_risk = "Suspicious"
     else:
-        final_risk = "Critical Risk"
+        final_risk = "Critical"
 
-    return {"url": url, "verdict": vt_status, "total_weight": weight, "final_risk": final_risk, "details": risk_rules, "virustotal_link": vt_result.get("permalink", "")}
+
+    return {"url": url, "verdict": vt_status, "total_weight": min(100, weight), "final_risk": final_risk, "details": risk_rules, "virustotal_link": vt_result.get("permalink", "")}
