@@ -4,11 +4,14 @@ from email import message_from_binary_file, policy
 from email.utils import parseaddr
 from modules.attachment_scanner import attachment_evaluation, get_file_extension, extract_attachments
 from modules.whitelistandeditDistanceCheck import classify_sender
+from modules import suspicious_url
+
 
 # app configs
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000 # 16MB - anitvirus API accepts a maxmimum of 10MB for attachments so an additional 6MB for the rest of the email should be plenty
-app.config['UPLOAD_EXTENSIONS'] = ['eml'] # allow only eml files
+app.config[
+    'MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000  # 16MB - anitvirus API accepts a maxmimum of 10MB for attachments so an additional 6MB for the rest of the email should be plenty
+app.config['UPLOAD_EXTENSIONS'] = ['eml']  # allow only eml files
 
 # global variables
 FILENAME = ""
@@ -87,6 +90,55 @@ def upload():
             "rule": "Attachment Scan Unknown Results",
             "severity": "Suspicious",
             "weight": SCAN_NO_RESULT_WEIGHT,
+        })
+
+    try:
+
+        file.stream.seek(0)
+        email_text = suspicious_url.extract_eml_txt(file.stream)
+
+        urls = suspicious_url.extract_urls(email_text)
+
+        if urls:
+            for url in urls:
+                vt_result = suspicious_url.push_to_virustotal(url)
+                url_eval = suspicious_url.evaluate_url_risk(url, vt_result)
+
+       
+                #reasons_text = [
+                #    f"{desc} (Severity: {sev}, +{w}pts)"
+                #    for desc, sev, w in url_eval["details"]
+                #]
+
+                print(url_eval['url'])
+                signal_entry = {
+                    "rule": "URL Analysis",
+                    "severity": url_eval["final_risk"],
+                    "weight": url_eval["total_weight"],
+                    "reasons": "Suspicious URL: " + url_eval["url"],
+                }
+
+
+                if url_eval.get("virustotal_link"):
+                    signal_entry["virustotal_link"] = url_eval["virustotal_link"]
+
+                overall_scan_result["signals"].append(signal_entry)
+
+        else:
+            overall_scan_result["signals"].append({
+                "rule": "No URLs Found",
+                "severity": "Info",
+                "weight": 0,
+                "reasons": []
+            })
+
+    except Exception as e:
+        print(f"Error occurred during URL scan: {e}")
+        overall_scan_result["signals"].append({
+            "rule": "URL Scan Failed",
+            "severity": "Suspicious",
+            "weight": 20,
+            "reasons": [str(e)]
         })
 
     # Overall Evalutation of Risk Score
