@@ -1,5 +1,6 @@
 filetype==1.2.0
 Flask==3.1.2
+pytest==8.4.2
 python-dotenv==1.1.1
 python_magic==0.4.27
 Requests==2.32.5

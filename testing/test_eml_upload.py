@@ -1,3 +1,6 @@
+### hello welcome, i used pytest to automate some testing 
+### but didn't have enough time to finish for all test cases =(
+### i mean this file works but whats the point if the rest dont
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import io
