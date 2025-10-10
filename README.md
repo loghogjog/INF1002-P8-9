@@ -9,11 +9,13 @@ It performs a series of checks on a .eml file.
 5. Suspicious URL Detection
 6. Attachment Scan
 ```
+===
 
 ## Installation
 ```bash
 git clone https://github.com/loghogjog/INF1002-P8-9.git
 ```
+===
 
 ## SETUP
 ```bash
@@ -35,8 +37,14 @@ ATTACHMENT_API_KEY=<attachmentAV_api_key>
 ANTIVIRUS_URL=https://eu.developer.attachmentav.com/v1/scan/sync/binary
 URL_SCAN_API_KEY=<virustotal_api_key>
 
+```
+===
+
+## Usage
+```bash
+# start the app
 python app.py
 
-# only .eml files accepted
-```
- 
+# note: for now, only .eml files can be uploaded
+# happy analysing XD
+``` 
