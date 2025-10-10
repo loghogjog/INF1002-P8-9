@@ -15,6 +15,7 @@ It performs a series of checks on a .eml file.
 ```bash
 git clone https://github.com/loghogjog/INF1002-P8-9.git
 ```
+---
 
 ## SETUP
 ```bash
@@ -37,6 +38,7 @@ ANTIVIRUS_URL=https://eu.developer.attachmentav.com/v1/scan/sync/binary
 URL_SCAN_API_KEY=<virustotal_api_key>
 
 ```
+---
 
 ## Usage
 ```bash
