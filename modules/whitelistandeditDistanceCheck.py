@@ -49,7 +49,9 @@ def is_suspicious(domain, threshold=2):
 def classify_sender(email_address):
     domain = extract_domain(email_address)
     if not domain:
-        return "Invalid email"
+        return {"rule" : "Invalid email",
+                "severity" : "Critical",
+                "weight" : 100}
 
     if is_whitelisted(domain):
         return {"rule" : "Trusted sender (in whitelist)",
@@ -74,5 +76,6 @@ def classify_sender(email_address):
             "weight" : weight,
             "reasons":reason}
     
+
 
 
