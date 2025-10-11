@@ -74,8 +74,9 @@ def classify_sender(email_address):
     return {"rule" : rule,
             "severity" : severity,
             "weight" : weight,
-            "reasons":reason}
+            "reasons" : reason}
     
+
 
 
 
