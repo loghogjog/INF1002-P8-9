@@ -1,6 +1,24 @@
 #---Tristan Koh---#
 import re
 
+
+def load_whitelist(filename="static/src/whitelist.txt"):
+    with open(filename, "r") as f:
+        return [line.strip().lower() for line in f if line.strip()]
+
+
+WHITELIST = load_whitelist()
+
+
+def extract_domain(email_address):
+    match = re.search(r'@([A-Za-z0-9.-]+)', email_address)
+    return match.group(1).lower() if match else None
+
+
+def is_whitelisted(domain):
+    return domain in WHITELIST
+
+
 def levenshtein_distance(word1, word2):
     """Dynamic programming solution"""
     m = len(word1)
@@ -20,23 +38,6 @@ def levenshtein_distance(word1, word2):
                 table[i][j] = 1 + min(table[i - 1][j], table[i][j - 1], table[i - 1][j - 1])
                 
     return table[-1][-1]
-
-
-def load_whitelist(filename="static/src/whitelist.txt"):
-    with open(filename, "r") as f:
-        return [line.strip().lower() for line in f if line.strip()]
-
-
-WHITELIST = load_whitelist()
-
-
-def extract_domain(email_address):
-    match = re.search(r'@([A-Za-z0-9.-]+)', email_address)
-    return match.group(1).lower() if match else None
-
-
-def is_whitelisted(domain):
-    return domain in WHITELIST
 
 
 def is_suspicious(domain, threshold=2):
@@ -76,6 +77,7 @@ def classify_sender(email_address):
             "weight" : weight,
             "reasons" : reason}
     
+
 
 
 
