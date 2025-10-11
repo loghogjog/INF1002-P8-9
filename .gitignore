@@ -4,4 +4,3 @@ node_modules/
 _pycache__/
 tailwindcss
 .env
-modules/_pycache__
