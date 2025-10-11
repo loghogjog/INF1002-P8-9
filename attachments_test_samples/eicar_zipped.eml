@@ -1,0 +1,24 @@
+From: tester@example.com
+To: lab@example.com
+Subject: EICAR test - zipped
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============2774876770903031798=="
+
+--===============2774876770903031798==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+EICAR compressed inside a zip archive.
+
+--===============2774876770903031798==
+Content-Type: application/zip
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="eicar.zip"
+MIME-Version: 1.0
+
+UEsDBBQAAAAIAO0jS1s8z1FoRgAAAEQAAAAJAAAAZWljYXIuY29tizD1VwxQdXAMiDaJCYiKMDXR
+CIjTNHd21jSvVXH1dHYM0g0OcfRzcQxy0XX0C/EM8wwKDdYNcQ0O0XXz9HFVVPHQ9tACAFBLAQIU
+AxQAAAAIAO0jS1s8z1FoRgAAAEQAAAAJAAAAAAAAAAAAAACAAQAAAABlaWNhci5jb21QSwUGAAAA
+AAEAAQA3AAAAbQAAAAAA
+
+--===============2774876770903031798==--

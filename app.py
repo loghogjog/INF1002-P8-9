@@ -1,5 +1,6 @@
 # imports
 from flask import Flask, jsonify, request, render_template
+from werkzeug.exceptions import RequestEntityTooLarge
 from email import message_from_binary_file, policy
 from email.utils import parseaddr
 from modules.attachment_scanner import attachment_evaluation, get_file_extension, extract_attachments
@@ -9,8 +10,7 @@ from modules import suspicious_url
 
 # app configs
 app = Flask(__name__)
-app.config[
-    'MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000  # 16MB - anitvirus API accepts a maxmimum of 10MB for attachments so an additional 6MB for the rest of the email should be plenty
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000  # 16MB - anitvirus API accepts a maxmimum of 10MB for attachments so an additional 6MB for the rest of the email should be plenty
 app.config['UPLOAD_EXTENSIONS'] = ['eml']  # allow only eml files
 
 # global variables
@@ -21,11 +21,16 @@ SUSPICIOUS_RETURN_CODE = 1
 MALICIOUS_RETURN_CODE = 2
 INVALID_RETURN_CODE = -1
 
+# Handles reponse for files larger than allowed file size
+@app.errorhandler(RequestEntityTooLarge)
+def handle_large_file(e):
+    return "Maximum File Size 16MB!", 413
 
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html', response=None)
 
+# Main route - Phishing Analysis
 @app.route('/', methods=['POST'])
 def upload():
     '''
