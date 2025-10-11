@@ -54,13 +54,13 @@ def classify_sender(email_address):
     if is_whitelisted(domain):
         return {"rule" : "Trusted sender (in whitelist)",
                 "severity" : "Info",
-                "weight" : 0}
+                "weight" : -100}
 
     suspicious, target_domain = is_suspicious(domain)
     if suspicious:
         rule = f"Scam Likely"
         severity = "Critical"
-        weight = 40
+        weight = 50
         reason = f"Similar to {target_domain}"
 
     else:
@@ -74,4 +74,5 @@ def classify_sender(email_address):
             "weight" : weight,
             "reasons":reason}
     
+
 
