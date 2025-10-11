@@ -81,7 +81,7 @@ def upload():
             overall_scan_result['signals'].append({
                 "rule": "No Attachments Found",
                 "severity": "Info",
-                "weight": 0,
+                "weight": SAFE_RETURN_CODE,
             })
 
     except Exception as e:
@@ -91,7 +91,8 @@ def upload():
             "severity": "Suspicious",
             "weight": SCAN_NO_RESULT_WEIGHT,
         })
-
+    
+    ''' URL Scanning '''
     try:
 
         file.stream.seek(0)
@@ -104,18 +105,22 @@ def upload():
                 vt_result = suspicious_url.push_to_virustotal(url)
                 url_eval = suspicious_url.evaluate_url_risk(url, vt_result)
 
-       
-                #reasons_text = [
-                #    f"{desc} (Severity: {sev}, +{w}pts)"
-                #    for desc, sev, w in url_eval["details"]
-                #]
-
-                print(url_eval['url'])
+                print("\n-----URL Evaluation-----")
+                print(url_eval)
+                match url_eval['final_risk']:
+                    case "Info":
+                        url_result_msg = "Pass"
+                    case "Suspicious":
+                        url_result_msg = "Suspicious"
+                    case "Critical":
+                        url_result_msg = "Fail"
+                    case _:
+                        url_result_msg = "Unknown"
                 signal_entry = {
                     "rule": "URL Analysis",
                     "severity": url_eval["final_risk"],
                     "weight": url_eval["total_weight"],
-                    "reasons": "Suspicious URL: " + url_eval["url"],
+                    "reasons": ["URL: " + url_eval["url"] + " - " + url_result_msg],
                 }
 
 
@@ -128,7 +133,7 @@ def upload():
             overall_scan_result["signals"].append({
                 "rule": "No URLs Found",
                 "severity": "Info",
-                "weight": 0,
+                "weight": SAFE_RETURN_CODE,
                 "reasons": []
             })
 
@@ -137,7 +142,7 @@ def upload():
         overall_scan_result["signals"].append({
             "rule": "URL Scan Failed",
             "severity": "Suspicious",
-            "weight": 20,
+            "weight": SCAN_NO_RESULT_WEIGHT,
             "reasons": [str(e)]
         })
 
@@ -152,6 +157,7 @@ def upload():
         verdict = MALICIOUS_RETURN_CODE
     overall_scan_result['verdict'] = verdict
     overall_scan_result['score'] = moderated_risk_score
+    print("\n-----Final Risk Scoring-----")
     print(overall_scan_result)
     
     # For automated testing
