@@ -1,6 +1,7 @@
-sit.singaporetech.edu.sg
+singaporetech.edu.sg
 gov.sg
 google.com
 microsoft.com
+linkedin.com
 ocbc.com
 dbs.com

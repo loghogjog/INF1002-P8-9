@@ -1,6 +1,24 @@
 #---Tristan Koh---#
 import re
 
+
+def load_whitelist(filename="static/src/whitelist.txt"):
+    with open(filename, "r") as f:
+        return [line.strip().lower() for line in f if line.strip()]
+
+
+WHITELIST = load_whitelist()
+
+
+def extract_domain(email_address):
+    match = re.search(r'@([A-Za-z0-9.-]+)', email_address)
+    return match.group(1).lower() if match else None
+
+
+def is_whitelisted(domain):
+    return domain in WHITELIST
+
+
 def levenshtein_distance(word1, word2):
     """Dynamic programming solution"""
     m = len(word1)
@@ -22,23 +40,6 @@ def levenshtein_distance(word1, word2):
     return table[-1][-1]
 
 
-def load_whitelist(filename="static/src/whitelist.txt"):
-    with open(filename, "r") as f:
-        return [line.strip().lower() for line in f if line.strip()]
-
-
-WHITELIST = load_whitelist()
-
-
-def extract_domain(email_address):
-    match = re.search(r'@([A-Za-z0-9.-]+)', email_address)
-    return match.group(1).lower() if match else None
-
-
-def is_whitelisted(domain):
-    return domain in WHITELIST
-
-
 def is_suspicious(domain, threshold=2):
     for trusted_domain in WHITELIST:
         if levenshtein_distance(domain, trusted_domain) <= threshold:
@@ -49,7 +50,9 @@ def is_suspicious(domain, threshold=2):
 def classify_sender(email_address):
     domain = extract_domain(email_address)
     if not domain:
-        return "Invalid email"
+        return {"rule" : "Invalid email",
+                "severity" : "Critical",
+                "weight" : 100}
 
     if is_whitelisted(domain):
         return {"rule" : "Trusted sender (in whitelist)",
@@ -72,7 +75,10 @@ def classify_sender(email_address):
     return {"rule" : rule,
             "severity" : severity,
             "weight" : weight,
-            "reasons":reason}
+            "reasons" : reason}
     
+
+
+
 
 
