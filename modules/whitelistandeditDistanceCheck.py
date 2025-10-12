@@ -51,7 +51,7 @@ def classify_sender(email_address):
     domain = extract_domain(email_address)
     if not domain:
         return {"rule" : "Invalid email",
-                "severity" : "Critical",
+                "severity" : "Suspicious",
                 "weight" : 40}
 
     if is_whitelisted(domain):
