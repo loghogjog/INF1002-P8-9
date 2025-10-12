@@ -159,7 +159,7 @@ def evaluate_url_risk(url, vt_result):
 
     if weight <= 50:
         final_risk = "Info"
-    elif weight <= 100:
+    elif weight < 100:
         final_risk = "Suspicious"
     else:
         final_risk = "Critical"

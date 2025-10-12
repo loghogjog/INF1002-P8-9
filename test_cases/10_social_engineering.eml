@@ -1,0 +1,29 @@
+From: HR Team <hr@examplecorp.com>
+To: employee@example.com
+Subject: URGENT: Verify your employment details
+Date: Sat, 11 Oct 2025 15:41:06 +0000
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8445562083838200649=="
+
+--===============8445562083838200649==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+This is an important notice: please verify your employment details in the att=
+ached document to avoid payroll interruptions.
+This request is time-sensitive and marked URGENT by the payroll department.
+
+Thanks,
+HR
+
+--===============8445562083838200649==
+Content-Type: image/png
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="employee-details.png"
+MIME-Version: 1.0
+
+iVBORw0KGgoAAAANSUhEUg==
+
+--===============8445562083838200649==--

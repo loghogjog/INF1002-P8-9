@@ -52,7 +52,7 @@ def classify_sender(email_address):
     if not domain:
         return {"rule" : "Invalid email",
                 "severity" : "Critical",
-                "weight" : 100}
+                "weight" : 40}
 
     if is_whitelisted(domain):
         return {"rule" : "Trusted sender (in whitelist)",

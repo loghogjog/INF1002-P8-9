@@ -1,0 +1,31 @@
+From: Microsoft Support <support@microsoft.com>
+To: user@example.com
+Subject: Important: Update your billing info
+Date: Sat, 11 Oct 2025 15:41:06 +0000
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============5933028752635743348=="
+
+--===============5933028752635743348==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Dear user,
+
+We could not process your recent payment. Please review your billing info her=
+e:
+http://172.16.254.1/payment-review
+
+Attached is a billing summary for your convenience.
+
+Regards,
+Microsoft Billing
+
+--===============5933028752635743348==
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="billing-summary.txt"
+MIME-Version: 1.0
+
+SW52b2ljZSBJRDogMTIzNDUKQW1vdW50OiBVU0QgMC4wMAo=
+
+--===============5933028752635743348==--

@@ -1,0 +1,27 @@
+From: payments@online-shop.example
+To: customer@example.com
+Subject: Your order receipt
+Date: Sat, 11 Oct 2025 15:41:06 +0000
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============4729344038964042020=="
+
+--===============4729344038964042020==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Hi,
+
+Thank you for your order. Receipt attached.
+
+Regards,
+Online Shop
+
+--===============4729344038964042020==
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="receipt.pdf.exe"
+MIME-Version: 1.0
+
+T3JkZXIgIzk4NzY1ClRvdGFsOiAkOS45OQo=
+
+--===============4729344038964042020==--
