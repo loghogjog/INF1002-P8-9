@@ -1,0 +1,16 @@
+From: PayPal Billing <billing@paypaI.com>
+To: recipient@example.com
+Subject: Payment problem with your account
+Date: Sat, 11 Oct 2025 15:41:06 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Dear customer,
+
+We could not process your last payment. Please verify your account to avoid l=
+imitations:
+https://www.paypaI.com/verify-account
+
+Sincerely,
+PayPal Billing Team

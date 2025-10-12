@@ -1,0 +1,29 @@
+From: NYTimes <news@nytimes.com>
+To: reader@example.com
+Subject: Today's Briefing
+Date: Sat, 11 Oct 2025 15:41:06 +0000
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============1846373403926689636=="
+
+--===============1846373403926689636==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Good morning,
+
+Here are today's top stories. Visit:
+https://www.nytimes.com/2025/10/10/world/sample-article.html
+https://www.nytimes.com/subscribe
+
+Best,
+NYTimes
+
+--===============1846373403926689636==
+Content-Type: application/pdf
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="newsletter.pdf"
+MIME-Version: 1.0
+
+JVBERi0xLjQKJUZha2UgUERGIGZvciB0ZXN0Cg==
+
+--===============1846373403926689636==--
