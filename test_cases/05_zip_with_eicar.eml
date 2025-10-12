@@ -1,0 +1,30 @@
+From: invoices@vendor-example.com
+To: accounting@example.com
+Subject: Invoice Attached (ZIP)
+Date: Sat, 11 Oct 2025 15:41:06 +0000
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7880311757295170857=="
+
+--===============7880311757295170857==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Hello,
+
+Please find the invoice attached in the ZIP file.
+
+Best,
+Vendor Billing
+
+--===============7880311757295170857==
+Content-Type: application/zip
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="invoice.zip"
+MIME-Version: 1.0
+
+UEsDBBQAAAAIACN9S1s8z1FoRgAAAEQAAAAJAAAAZWljYXIudHh0izD1VwxQdXAMiDaJCYiKMDXR
+CIjTNHd21jSvVXH1dHYM0g0OcfRzcQxy0XX0C/EM8wwKDdYNcQ0O0XXz9HFVVPHQ9tACAFBLAQIU
+AxQAAAAIACN9S1s8z1FoRgAAAEQAAAAJAAAAAAAAAAAAAACAAQAAAABlaWNhci50eHRQSwUGAAAA
+AAEAAQA3AAAAbQAAAAAA
+
+--===============7880311757295170857==--

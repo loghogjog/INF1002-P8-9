@@ -1,0 +1,24 @@
+From: security-test@example.org
+To: tester@example.com
+Subject: EICAR test attachment
+Date: Sat, 11 Oct 2025 15:41:06 +0000
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============2836578931974114177=="
+
+--===============2836578931974114177==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+This email includes an EICAR test file in the attachment to exercise antiviru=
+s detection. This is a benign test string.
+
+--===============2836578931974114177==
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="eicar.txt"
+MIME-Version: 1.0
+
+WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNU
+LUZJTEUhJEgrSCo=
+
+--===============2836578931974114177==--

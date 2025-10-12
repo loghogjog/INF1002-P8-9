@@ -1,0 +1,22 @@
+From: tester@example.com
+To: lab@example.com
+Subject: EICAR test - exe disguised as com
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7687472524800895131=="
+
+--===============7687472524800895131==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+This message contains the EICAR test file as an attachment for AV testing.
+
+--===============7687472524800895131==
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="eicar.com"
+MIME-Version: 1.0
+
+WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNU
+LUZJTEUhJEgrSCo=
+
+--===============7687472524800895131==--

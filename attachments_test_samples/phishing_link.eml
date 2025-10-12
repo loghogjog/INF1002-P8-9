@@ -1,0 +1,28 @@
+From: support@paypal.example.com
+To: victim@example.org
+Subject: Urgent: Verify your account
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============6503607158664099349=="
+
+--===============6503607158664099349==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Your email client does not support HTML.
+
+--===============6503607158664099349==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html>
+  <body>
+    <p>Dear user,</p>
+    <p>Your PayPal account has been limited. <a href=3D"http://malicious-exam=
+ple.test/login">Click here to verify</a></p>
+    <p>Regards,<br>PayPal Support</p>
+  </body>
+</html>
+
+--===============6503607158664099349==--

@@ -1,0 +1,22 @@
+From: unknown
+To: ops@example.org
+Subject: File for scanning
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============1337551903554174514=="
+X-AV-Scan-Status: unknown
+
+--===============1337551903554174514==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Please scan the attached file.
+
+--===============1337551903554174514==
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="data.bin"
+MIME-Version: 1.0
+
+UHJvcHJpZXRhcnkgYmluYXJ5IGRhdGEgcGxhY2Vob2xkZXI=
+
+--===============1337551903554174514==--

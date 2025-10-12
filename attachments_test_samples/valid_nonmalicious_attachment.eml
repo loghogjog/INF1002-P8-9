@@ -1,0 +1,21 @@
+From: reporter@reports.example.com
+To: team@example.org
+Subject: Monthly report attached
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============3797061927802772458=="
+
+--===============3797061927802772458==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Please find the monthly report attached.
+
+--===============3797061927802772458==
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="report.txt"
+MIME-Version: 1.0
+
+UXVhcnRlcmx5IHJlcG9ydCAtIFExCkRhdGE6IDEsMiwzCg==
+
+--===============3797061927802772458==--

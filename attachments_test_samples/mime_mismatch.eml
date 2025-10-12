@@ -1,0 +1,22 @@
+From: sender@files.example.com
+To: user@example.org
+Subject: Document attached
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============6361880662853419707=="
+
+--===============6361880662853419707==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Attached is the document you requested.
+
+--===============6361880662853419707==
+Content-Type: application/pdf
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="document.pdf"
+MIME-Version: 1.0
+
+VGhpcyBmaWxlIGlzIGFjdHVhbGx5IHBsYWluIHRleHQsIG5vdCBhIFBERi4gUERGX0hFQURFUl9G
+QUtF
+
+--===============6361880662853419707==--
